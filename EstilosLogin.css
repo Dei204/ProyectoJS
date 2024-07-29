@@ -7,12 +7,12 @@
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    background-image: url(img/registro.jpg);
 }
 
 .super-containaer {
@@ -26,10 +26,12 @@ body {
 h2 {
     text-align: center;
     font-weight: 600;
+    color: white;
 }
 
 .form-group {
     margin-bottom: 15px;
+    color: #ffffff;
 }
 
 label {

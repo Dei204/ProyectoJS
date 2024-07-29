@@ -35,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Color de fondo según prioridad
       switch (task.priority) {
           case 'alta':
-              li.style.backgroundColor = '#f8d7da'; // Rojo claro
+              li.style.backgroundColor = '#f8d7da';
               break;
           case 'media':
-              li.style.backgroundColor = '#fff3cd'; // Amarillo claro
+              li.style.backgroundColor = '#fff3cd'; 
               break;
           case 'baja':
-              li.style.backgroundColor = '#d4edda'; // Verde claro
+              li.style.backgroundColor = '#d4edda'; 
               break;
       }
 
@@ -132,11 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadTasks();
 });
-
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('EvenInput');

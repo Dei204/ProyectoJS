@@ -6,9 +6,10 @@
 
 body {
     font-family: 'Georgia', serif;
-    background-color: #f7f7f7;
+    background-color:transparent;
     margin: 0;
     padding: 0;
+    background-image: url(img/listas.jpg);
 }
 
 .super {
@@ -18,7 +19,7 @@ body {
 }
 
 .containerTop, .contenedorTop {
-    background-color: #ffffff;
+    background-color:transparent;
     border: 1px solid #ccc;
     padding: 25px;
     width: 45%;
@@ -78,5 +79,11 @@ li {
 @media (max-width: 600px) {
     .super {
         flex-direction: column;
+        align-items: center;
+    }
+
+    .containerTop, .contenedorTop {
+        width: 90%; 
+        margin-bottom: 20px; 
     }
 }
