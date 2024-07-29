@@ -11,25 +11,32 @@
 
     <div class="super">
     
-    <div class="containerTop">
-    <div class="container">
-        <h1>Lista de Tareas</h1>
-        <input type="text" id="taskInput" placeholder="Escribe una tarea...">
-        <button id="addTaskButton">Agregar Tarea</button>
-        <ul id="taskList"></ul>
-        <p id="feedbackMessage"></p>
-    </div>
-    </div>
+        <div class="containerTop">
+            <div class="container">
+                <h1>Lista de Tareas</h1>
+                <input type="text" id="taskInput" placeholder="Escribe una tarea...">
+                <select id="prioritySelect">
+                    <option value="baja">Baja</option>
+                    <option value="media" selected>Media</option>
+                    <option value="alta">Alta</option>
+                </select>
+                <button id="addTaskButton">Agregar Tarea</button>
+                <ul id="taskList"></ul>
+                <p id="feedbackMessage"></p>
+            </div>
+        </div>
 
-    <div  class="contenedorTop">
-    <div class="contenedor">
-        <h1>Lista de Eventos</h1>
-        <input type="text" id="EvenInput" placeholder="Escribe un Evento...">
-        <button id="EvenkButton">Agregar Evento</button>
-        <ul id="EvenkList"></ul>
-        <p id="Evento"></p>
-    </div>
-    </div>
+        <div class="contenedorTop">
+            <div class="contenedor">
+                <h1>Lista de Eventos</h1>
+                <input type="text" id="EvenInput" placeholder="Descripción del evento">
+                <input type="date" id="DateInput"> <!-- Campo añadido para la fecha -->
+                <button id="EvenkButton">Agregar Evento</button>
+                <ul id="EvenkList"></ul>
+                <p id="Evento"></p>
+            </div>
+        </div>
+        
 
     </div>
     

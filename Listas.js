@@ -1,194 +1,232 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-    const taskInput = document.getElementById("taskInput");
-    const addTaskButton = document.getElementById("addTaskButton");
-    const taskList = document.getElementById("taskList");
-    const feedbackMessage = document.getElementById("feedbackMessage");
-  
-    const loadTasks = () => {
+  const taskInput = document.getElementById("taskInput");
+  const prioritySelect = document.getElementById("prioritySelect"); 
+  const addTaskButton = document.getElementById("addTaskButton");
+  const taskList = document.getElementById("taskList");
+  const feedbackMessage = document.getElementById("feedbackMessage");
+
+  const loadTasks = () => {
       const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
       tasks.forEach(task => addTaskToDOM(task));
-    };
-  
-    const saveTask = (task) => {
+  };
+
+  const saveTask = (task) => {
       const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
       tasks.push(task);
       localStorage.setItem("tasks", JSON.stringify(tasks));
-    };
-  
-    const removeTask = (task) => {
+  };
+
+  const removeTask = (task) => {
       let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-      tasks = tasks.filter(t => t !== task);
+      tasks = tasks.filter(t => t.task !== task.task); // Filtrar por tarea
       localStorage.setItem("tasks", JSON.stringify(tasks));
-    };
-  
-    const updateTaskInStorage = (oldTask, newTask) => {
+  };
+
+  const updateTaskInStorage = (oldTask, newTask) => {
       let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-      tasks = tasks.map(task => (task === oldTask ? newTask : task));
+      tasks = tasks.map(task => (task.task === oldTask.task ? newTask : task));
       localStorage.setItem("tasks", JSON.stringify(tasks));
-    };
-  
-    const addTaskToDOM = (task) => {
+  };
+
+  const addTaskToDOM = (task) => {
       const li = document.createElement("li");
-      li.textContent = task;
-  
+      li.textContent = `${task.task} (Prioridad: ${task.priority})`;
+
+      // Color de fondo según prioridad
+      switch (task.priority) {
+          case 'alta':
+              li.style.backgroundColor = '#f8d7da'; // Rojo claro
+              break;
+          case 'media':
+              li.style.backgroundColor = '#fff3cd'; // Amarillo claro
+              break;
+          case 'baja':
+              li.style.backgroundColor = '#d4edda'; // Verde claro
+              break;
+      }
+
       const deleteButton = document.createElement("button");
       deleteButton.textContent = "Eliminar";
       deleteButton.classList.add("deleteButton");
-  
+
       const editButton = document.createElement("button");
       editButton.textContent = "Editar";
       editButton.classList.add("editButton");
-  
+
       deleteButton.addEventListener("click", () => {
-        taskList.removeChild(li);
-        removeTask(task);
-        showFeedbackMessage("Tarea eliminada correctamente");
+          taskList.removeChild(li);
+          removeTask(task);
+          showFeedbackMessage("Tarea eliminada correctamente");
       });
-  
+
       editButton.addEventListener("click", () => {
-        const newTask = prompt("Edita la tarea:", task);
-        if (newTask && newTask.trim() !== "" && newTask !== task) {
+          const newTask = prompt("Edita la tarea:", task.task);
+          const newPriority = prompt("Edita la prioridad (baja, media, alta):", task.priority);
+          if (newTask && newTask.trim() !== "" && newPriority && ['baja', 'media', 'alta'].includes(newPriority) && newTask !== task.task) {
+              li.textContent = `${newTask} (Prioridad: ${newPriority})`;
 
-          li.textContent = newTask;
-          li.appendChild(editButton);
-          li.appendChild(deleteButton);
+              // Actualizar color de fondo según nueva prioridad
+              switch (newPriority) {
+                  case 'alta':
+                      li.style.backgroundColor = '#f8d7da'; // Rojo claro
+                      break;
+                  case 'media':
+                      li.style.backgroundColor = '#fff3cd'; // Amarillo claro
+                      break;
+                  case 'baja':
+                      li.style.backgroundColor = '#d4edda'; // Verde claro
+                      break;
+              }
 
-          updateTaskInStorage(task, newTask);
+              li.appendChild(editButton);
+              li.appendChild(deleteButton);
 
-          showFeedbackMessage("Tarea actualizada correctamente");
-      
-          deleteButton.addEventListener("click", () => {
-            taskList.removeChild(li);
-            removeTask(newTask);
-            showFeedbackMessage("Tarea eliminada correctamente");
-          });
-          task = newTask; 
-        } else if (newTask === task) {
-          showFeedbackMessage("No puedes actualizar la tarea a lo mismo");
-        } else {
-          showFeedbackMessage("La tarea no puede estar vacía");
-        }
+              const updatedTask = { task: newTask, priority: newPriority };
+              updateTaskInStorage(task, updatedTask);
+
+              showFeedbackMessage("Tarea actualizada correctamente");
+
+              deleteButton.addEventListener("click", () => {
+                  taskList.removeChild(li);
+                  removeTask(updatedTask);
+                  showFeedbackMessage("Tarea eliminada correctamente");
+              });
+              task = updatedTask; // Actualizar tarea en variable local
+          } else if (newTask === task.task) {
+              showFeedbackMessage("No puedes actualizar la tarea a lo mismo");
+          } else if (!['baja', 'media', 'alta'].includes(newPriority)) {
+              showFeedbackMessage("Prioridad no válida");
+          } else {
+              showFeedbackMessage("La tarea no puede estar vacía");
+          }
       });
-  
+
       li.appendChild(editButton);
       li.appendChild(deleteButton);
       taskList.appendChild(li);
-    };
-  
-    const showFeedbackMessage = (message) => {
+  };
+
+  const showFeedbackMessage = (message) => {
       feedbackMessage.textContent = message;
       setTimeout(() => (feedbackMessage.textContent = ""), 3000);
-    };
-  
-    addTaskButton.addEventListener("click", () => {
+  };
+
+  addTaskButton.addEventListener("click", () => {
       const task = taskInput.value.trim();
+      const priority = prioritySelect.value; 
       if (task === "") {
-        showFeedbackMessage("La tarea no puede estar vacía");
-        return;
+          showFeedbackMessage("La tarea no puede estar vacía");
+          return;
       }
-      addTaskToDOM(task);
-      saveTask(task);
+      if (!['baja', 'media', 'alta'].includes(priority)) {
+          showFeedbackMessage("Prioridad no válida");
+          return;
+      }
+      const newTask = { task, priority };
+      addTaskToDOM(newTask);
+      saveTask(newTask);
       taskInput.value = "";
+      prioritySelect.value = "media"; 
       showFeedbackMessage("Tarea agregada con éxito");
-    });
-  
-    loadTasks();
   });
 
+  loadTasks();
+});
 
 
-  
-  document.addEventListener('DOMContentLoaded', function() {
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('EvenInput');
     const button = document.getElementById('EvenkButton');
     const ul = document.getElementById('EvenkList');
-
+    const dateInput = document.getElementById('DateInput'); 
+  
     const loadEvents = () => {
         const events = JSON.parse(localStorage.getItem('events')) || [];
         events.forEach(event => addEventToDOM(event));
     };
-
+  
     const saveEvent = (event) => {
         const events = JSON.parse(localStorage.getItem('events')) || [];
         events.push(event);
         localStorage.setItem('events', JSON.stringify(events));
     };
-
+  
     const removeEvent = (event) => {
         let events = JSON.parse(localStorage.getItem('events')) || [];
-        events = events.filter(e => e !== event);
+        events = events.filter(e => e.description !== event.description || e.date !== event.date);
         localStorage.setItem('events', JSON.stringify(events));
     };
-
+  
     const updateEventInStorage = (oldEvent, newEvent) => {
         let events = JSON.parse(localStorage.getItem('events')) || [];
-        events = events.map(event => (event === oldEvent ? newEvent : event));
+        events = events.map(event => (event.description === oldEvent.description && event.date === oldEvent.date ? newEvent : event));
         localStorage.setItem('events', JSON.stringify(events));
     };
-
+  
     const addEventToDOM = (event) => {
         const li = document.createElement('li');
-        li.textContent = event;
-
+        li.textContent = `${event.description} - ${event.date}`;
+  
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Eliminar';
         deleteButton.classList.add('eliminar');
-
+  
         const editButton = document.createElement('button');
         editButton.textContent = 'Editar';
         editButton.classList.add('editar');
-
+  
         deleteButton.addEventListener('click', () => {
             ul.removeChild(li);
             removeEvent(event);
             showFeedbackMessage('Evento eliminado correctamente');
         });
-
+  
         editButton.addEventListener('click', () => {
-            const newEvent = prompt('Edita el evento:', event);
-            if (newEvent && newEvent.trim() !== '' && newEvent !== event) {
-                li.textContent = newEvent.trim();
+            const newDescription = prompt('Edita la descripción del evento:', event.description);
+            const newDate = prompt('Edita la fecha del evento (YYYY-MM-DD):', event.date);
+            if (newDescription && newDescription.trim() !== '' && newDate && newDate.trim() !== '') {
+                const newEvent = { description: newDescription.trim(), date: newDate.trim() };
+                li.textContent = `${newEvent.description} - ${newEvent.date}`;
                 li.appendChild(editButton);
                 li.appendChild(deleteButton);
                 updateEventInStorage(event, newEvent);
                 showFeedbackMessage('Evento actualizado correctamente');
-              
-                deleteButton.addEventListener('click', () => {
-                    ul.removeChild(li);
-                    removeEvent(newEvent);
-                    showFeedbackMessage('Evento eliminado correctamente');
-                });
-                event = newEvent; 
-            } else if (newEvent === event) {
-                showFeedbackMessage('No puedes actualizar el evento a lo mismo');
+                event = newEvent; // Update the reference of the event
             } else {
-                showFeedbackMessage('El evento no puede estar vacío');
+                showFeedbackMessage('La descripción y la fecha no pueden estar vacías');
             }
         });
-
+  
         li.appendChild(editButton);
         li.appendChild(deleteButton);
         ul.appendChild(li);
     };
-
+  
     const showFeedbackMessage = (message) => {
         const feedbackMessage = document.getElementById('Evento');
         feedbackMessage.textContent = message;
         setTimeout(() => (feedbackMessage.textContent = ''), 3000);
     };
-
+  
     button.addEventListener('click', () => {
-        const event = input.value.trim();
-        if (event === '') {
-            showFeedbackMessage('El evento no puede estar vacío');
+        const description = input.value.trim();
+        const date = dateInput.value.trim(); 
+        if (description === '' || date === '') {
+            showFeedbackMessage('La descripción y la fecha no pueden estar vacías');
             return;
         }
+        const event = { description, date };
         addEventToDOM(event);
         saveEvent(event);
         input.value = '';
+        dateInput.value = ''; 
         showFeedbackMessage('Evento agregado con éxito');
     });
-
+  
     loadEvents();
-});
+  });
+  
