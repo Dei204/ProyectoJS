@@ -1,3 +1,4 @@
+// Espera a que la página esté completamente cargada
 document.addEventListener("DOMContentLoaded", () => {
   const taskInput = document.getElementById("taskInput");
   const prioritySelect = document.getElementById("prioritySelect"); 
@@ -5,34 +6,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskList = document.getElementById("taskList");
   const feedbackMessage = document.getElementById("feedbackMessage");
 
+
+  // Carga las tareas desde el almacenamiento local y las muestra
   const loadTasks = () => {
       const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
       tasks.forEach(task => addTaskToDOM(task));
   };
 
+
+  // Guarda una nueva tarea en el almacenamiento local
   const saveTask = (task) => {
       const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
       tasks.push(task);
       localStorage.setItem("tasks", JSON.stringify(tasks));
   };
 
+
+   // Elimina una tarea del almacenamiento local
   const removeTask = (task) => {
       let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-      tasks = tasks.filter(t => t.task !== task.task); // Filtrar por tarea
+      tasks = tasks.filter(t => t.task !== task.task); 
       localStorage.setItem("tasks", JSON.stringify(tasks));
   };
 
+
+   // Actualiza una tarea en el almacenamiento local
   const updateTaskInStorage = (oldTask, newTask) => {
       let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
       tasks = tasks.map(task => (task.task === oldTask.task ? newTask : task));
       localStorage.setItem("tasks", JSON.stringify(tasks));
   };
 
+
+    // Añade una tarea a la lista en la página
   const addTaskToDOM = (task) => {
       const li = document.createElement("li");
       li.textContent = `${task.task} (Prioridad: ${task.priority})`;
 
-      // Color de fondo según prioridad
+     // Cambia el color de fondo según la prioridad
       switch (task.priority) {
           case 'alta':
               li.style.backgroundColor = '#f8d7da';
@@ -53,28 +64,32 @@ document.addEventListener("DOMContentLoaded", () => {
       editButton.textContent = "Editar";
       editButton.classList.add("editButton");
 
+
+     // Función para eliminar una tarea
       deleteButton.addEventListener("click", () => {
           taskList.removeChild(li);
           removeTask(task);
           showFeedbackMessage("Tarea eliminada correctamente");
       });
 
+
+      // Función para editar una tarea
       editButton.addEventListener("click", () => {
           const newTask = prompt("Edita la tarea:", task.task);
           const newPriority = prompt("Edita la prioridad (baja, media, alta):", task.priority);
           if (newTask && newTask.trim() !== "" && newPriority && ['baja', 'media', 'alta'].includes(newPriority) && newTask !== task.task) {
               li.textContent = `${newTask} (Prioridad: ${newPriority})`;
 
-              // Actualizar color de fondo según nueva prioridad
+      // Cambia el color de fondo según la nueva prioridad
               switch (newPriority) {
                   case 'alta':
-                      li.style.backgroundColor = '#f8d7da'; // Rojo claro
+                      li.style.backgroundColor = '#f8d7da'; 
                       break;
                   case 'media':
-                      li.style.backgroundColor = '#fff3cd'; // Amarillo claro
+                      li.style.backgroundColor = '#fff3cd'; 
                       break;
                   case 'baja':
-                      li.style.backgroundColor = '#d4edda'; // Verde claro
+                      li.style.backgroundColor = '#d4edda'; 
                       break;
               }
 
@@ -91,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   removeTask(updatedTask);
                   showFeedbackMessage("Tarea eliminada correctamente");
               });
-              task = updatedTask; // Actualizar tarea en variable local
+              task = updatedTask; 
           } else if (newTask === task.task) {
               showFeedbackMessage("No puedes actualizar la tarea a lo mismo");
           } else if (!['baja', 'media', 'alta'].includes(newPriority)) {
@@ -106,6 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
       taskList.appendChild(li);
   };
 
+
+  // Muestra un mensaje de retroalimentación al usuario
   const showFeedbackMessage = (message) => {
       feedbackMessage.textContent = message;
       setTimeout(() => (feedbackMessage.textContent = ""), 3000);
@@ -190,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.appendChild(deleteButton);
                 updateEventInStorage(event, newEvent);
                 showFeedbackMessage('Evento actualizado correctamente');
-                event = newEvent; // Update the reference of the event
+                event = newEvent; 
             } else {
                 showFeedbackMessage('La descripción y la fecha no pueden estar vacías');
             }
