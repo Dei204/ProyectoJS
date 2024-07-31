@@ -5,70 +5,78 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+.super-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
-    background-image: url(img/registro.jpg);
+    background-color: #121212; 
+    color: #e0e0e0; 
+    font-family: Arial, sans-serif;
 }
 
-.super-containaer {
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    padding: 40px;
-    width: 350px;
+.login-container {
+    background-color: #1e1e1e; 
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 300px;
 }
 
-h2 {
+.login-container h2 {
+    color: #750dec; 
+    margin-bottom: 20px;
     text-align: center;
-    font-weight: 600;
-    color: white;
 }
 
 .form-group {
     margin-bottom: 15px;
-    color: #ffffff;
 }
 
-label {
-    font-size: 14px;
-    font-weight: bold;
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ffffff; 
 }
 
-input {
+.form-group input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.3s;
-}
-
-input:focus {
-    border-color: #007bff;
-    outline: none;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #2c2c2c; 
+    color: #e0e0e0; 
 }
 
 button {
-    background-color: #28a745;
-    color: white;
+    background-color: #007bff; 
     border: none;
-    padding: 12px;
-    border-radius: 5px;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
     width: 100%;
-    margin-top: 10px;
-    font-weight: bold;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #0056b3; 
 }
 
+a button {
+    background-color: #28a745; 
+    margin-top: 10px;
+}
 
+a button:hover {
+    background-color: #218838; 
+}
+
+#message {
+    margin-top: 15px;
+    color: #ff4d4d; 
+    text-align: center;
+}
 
 
 @media (max-width: 768px) {
